@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "mybucket" {
-  bucket = "bitan.terraform-tutorials.com"
+  bucket = "bitanawsproj.online"
   acl    = "public-read"
   #policy = file("Policy.json")
   
