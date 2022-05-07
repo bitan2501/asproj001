@@ -5,7 +5,7 @@ provider "aws" {
 resource "aws_s3_bucket" "mybucket" {
   bucket = "bitanawsproj.online"
   acl    = "public-read"
-  #policy = file("Policy.json")
+  policy = file("Policy.json")
   
 
   website {
