@@ -47,41 +47,25 @@ etag = filemd5("./error.html")
 content_type = "text/html"
 }
 
-resource "aws_acm_certificate" "bitanawsproj" {
-  domain_name               = "bitanawsproj.online"
-  subject_alternative_names = ["www.bitanawsproj.online", "bitanawsproj.online"]
-  validation_method         = "DNS"
-}
+# SSL Certificate
+resource "aws_acm_certificate" "ssl_certificate" {
+  provider = aws.acm_provider
+  domain_name = var.domain_name
+  subject_alternative_names = ["*.${var.domain_name}"]
+  validation_method = "EMAIL"
+  #validation_method = "DNS"
 
-data "aws_route53_zone" "bitanawsproj" {
-  name         = "bitanawsproj.online"
-  private_zone = false
-}
+  tags = var.common_tags
 
-#data "aws_route53_zone" "bitanawsproj_org" {
-#  name         = "bitanawsproj.org"
-#  private_zone = false
-#}
-
-resource "aws_route53_record" "bitanawsproj" {
-  for_each = {
-    for dvo in aws_acm_certificate.bitanawsproj.domain_validation_options : dvo.domain_name => {
-      name    = dvo.resource_record_name
-      record  = dvo.resource_record_value
-      type    = dvo.resource_record_type
-      zone_id : data.aws_route53_zone.bitanawsproj.zone_id
-    }
+  lifecycle {
+    create_before_destroy = true
   }
-
-  allow_overwrite = true
-  name            = each.value.name
-  records         = [each.value.record]
-  ttl             = 60
-  type            = each.value.type
-  zone_id         = each.value.zone_id
 }
 
-resource "aws_acm_certificate_validation" "bitanawsproj" {
-  certificate_arn         = aws_acm_certificate.bitanawsproj.arn
-  validation_record_fqdns = [for record in aws_route53_record.bitanawsproj : record.fqdn]
+# Uncomment the validation_record_fqdns line if you do DNS validation instead of Email.
+resource "aws_acm_certificate_validation" "cert_validation" {
+  provider = aws.acm_provider
+  certificate_arn = aws_acm_certificate.ssl_certificate.arn
+  #validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
+
