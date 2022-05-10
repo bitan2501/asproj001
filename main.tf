@@ -1,5 +1,6 @@
 provider "aws" {
   region  = "us-east-1"
+  alias = "acm_provider"
 }
 
 resource "aws_s3_bucket" "mybucket01" {
