@@ -53,15 +53,15 @@ resource "aws_acm_certificate" "bitanawsproj" {
   validation_method         = "DNS"
 }
 
-data "aws_route53_zone" "bitanawsproj_com" {
+data "aws_route53_zone" "bitanawsproj" {
   name         = "bitanawsproj.com"
   private_zone = false
 }
 
-data "aws_route53_zone" "bitanawsproj_org" {
-  name         = "bitanawsproj.org"
-  private_zone = false
-}
+#data "aws_route53_zone" "bitanawsproj_org" {
+#  name         = "bitanawsproj.org"
+#  private_zone = false
+#}
 
 resource "aws_route53_record" "bitanawsproj" {
   for_each = {
