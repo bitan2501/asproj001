@@ -1,7 +1,7 @@
 provider "aws" {
   region  = "us-east-1"
   alias = "acm_provider"
-  source = "hashicorp/aws"
+
 }
 
 resource "aws_s3_bucket" "mybucket01" {
@@ -184,9 +184,13 @@ resource "aws_cloudfront_distribution" "root_s3_distribution" {
 
   tags = var.common_tags
 }
+resource "aws_route53_zone" "main" {
+  name = var.domain_name
+  tags = var.common_tags
+}
 
 resource "aws_route53_record" "root-a" {
-  zone_id = "Z01944282QK4HREUAU3HD"
+  zone_id = aws_route53_zone.main.zone_id
   name = var.domain_name
   type = "A"
 
@@ -198,7 +202,7 @@ resource "aws_route53_record" "root-a" {
 }
 
 resource "aws_route53_record" "www-a" {
-  zone_id = "Z01944282QK4HREUAU3HD"
+  zone_id = aws_route53_zone.main.zone_id
   name = "www.${var.domain_name}"
   type = "A"
 
