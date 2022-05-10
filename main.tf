@@ -45,19 +45,25 @@ source = "./error.html"
 etag = filemd5("./error.html")
 content_type = "text/html"
 }
-resource "aws_s3_bucket_object" "index02" {
-bucket = aws_s3_bucket.mybucket02.id
-acl = "public-read" # or can be “public-read”
-key = "index.html"
-source = "./index.html"
-etag = filemd5("./index.html")
-content_type = "text/html"
+
+# SSL Certificate
+resource "aws_acm_certificate" "ssl_certificate" {
+  provider = aws.acm_provider
+  domain_name = var.domain_name
+  subject_alternative_names = ["*.${var.domain_name}"]
+  #validation_method = "EMAIL"
+  validation_method = "DNS"
+
+  tags = var.common_tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
-resource "aws_s3_bucket_object" "error02" {
-bucket = aws_s3_bucket.mybucket02.id
-acl = "public-read" # or can be “public-read”
-key = "error.html"
-source = "./error.html"
-etag = filemd5("./error.html")
-content_type = "text/html"
+
+# Uncomment the validation_record_fqdns line if you do DNS validation instead of Email.
+resource "aws_acm_certificate_validation" "cert_validation" {
+  provider = aws.acm_provider
+  certificate_arn = aws_acm_certificate.ssl_certificate.arn
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
