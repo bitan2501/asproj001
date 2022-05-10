@@ -185,7 +185,7 @@ resource "aws_cloudfront_distribution" "root_s3_distribution" {
 }
 resource "aws_route53_zone" "bitanawsproj" {
   name         = "bitanawsproj.online"
-  private_zone = false
+  
 }
 resource "aws_route53_record" "root-a" {
   zone_id = aws_route53_zone.bitanawsproj.zone_id
