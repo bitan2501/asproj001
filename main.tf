@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "mybucket01" {
-  bucket = "bitanawsproj.online"
+  bucket = "www.${var.bucket_name}"
   acl    = "public-read"
   #policy = file("Policy.json")
   
@@ -12,26 +12,20 @@ resource "aws_s3_bucket" "mybucket01" {
     index_document = "index.html"
     error_document = "error.html"
   }
-  tags = {
-    Environment = "Terraform"
-    Name        = "my-tag01"
-  }
+  tags = var.common_tags
 
 }
 resource "aws_s3_bucket" "mybucket02" {
-  bucket = "www.bitanawsproj.online"
+  bucket = "var.bucket_name"
   acl    = "public-read"
   #policy = file("Policy.json")
   
 
   website {
-    index_document = "index.html"
-    error_document = "error.html"
+    redirect_all_requests_to = "https://www.${var.domain_name}"
   }
-  tags = {
-    Environment = "Terraform"
-    Name        = "my-tag02"
-  }
+
+  tags = var.common_tags
 
 }
 
