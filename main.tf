@@ -51,7 +51,7 @@ source = "./error.html"
 etag = filemd5("./error.html")
 content_type = "text/html"
 }
-resource "aws_s3_bucket_object" "index" {
+resource "aws_s3_bucket_object" "index02" {
 bucket = aws_s3_bucket.mybucket02.id
 acl = "public-read" # or can be “public-read”
 key = "index.html"
@@ -59,7 +59,7 @@ source = "./index.html"
 etag = filemd5("./index.html")
 content_type = "text/html"
 }
-resource "aws_s3_bucket_object" "error" {
+resource "aws_s3_bucket_object" "error02" {
 bucket = aws_s3_bucket.mybucket02.id
 acl = "public-read" # or can be “public-read”
 key = "error.html"
