@@ -69,7 +69,7 @@ resource "aws_route53_record" "bitanawsproj" {
       name    = dvo.resource_record_name
       record  = dvo.resource_record_value
       type    = dvo.resource_record_type
-      zone_id = dvo.domain_name == "bitanawsproj.org" ? data.aws_route53_zone.bitanawsproj_org.zone_id : data.aws_route53_zone.bitanawsproj_com.zone_id
+      zone_id : data.aws_route53_zone.bitanawsproj_com.zone_id
     }
   }
 
