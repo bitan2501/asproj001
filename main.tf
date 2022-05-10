@@ -61,7 +61,7 @@ resource "aws_acm_certificate" "ssl_certificate" {
     create_before_destroy = true
   }
 }
-resource "aws_route53_record" "cert-validations" {
+resource "aws_route53_record" "cert-validation" {
   count = length(aws_acm_certificate.some-cert.domain_validation_options)
 
   zone_id = Z09025261WQKPGHBA2IH5
