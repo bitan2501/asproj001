@@ -183,7 +183,7 @@ resource "aws_cloudfront_distribution" "root_s3_distribution" {
 
   tags = var.common_tags
 }
-data "aws_route53_zone" "bitanawsproj" {
+resource "aws_route53_zone" "bitanawsproj" {
   name         = "bitanawsproj.online"
   private_zone = false
 }
