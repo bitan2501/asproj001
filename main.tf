@@ -16,7 +16,7 @@ resource "aws_s3_bucket" "mybucket01" {
 
 }
 resource "aws_s3_bucket" "mybucket02" {
-  bucket = "var.bucket_name"
+  bucket = var.bucket_name
   acl    = "public-read"
   #policy = file("Policy.json")
   
