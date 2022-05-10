@@ -48,13 +48,13 @@ content_type = "text/html"
 }
 
 resource "aws_acm_certificate" "bitanawsproj" {
-  domain_name               = "bitanawsproj.com"
-  subject_alternative_names = ["www.bitanawsproj.com", "bitanawsproj.org"]
+  domain_name               = "bitanawsproj.online"
+  subject_alternative_names = ["www.bitanawsproj.online", "bitanawsproj.online"]
   validation_method         = "DNS"
 }
 
 data "aws_route53_zone" "bitanawsproj" {
-  name         = "bitanawsproj.com"
+  name         = "bitanawsproj.online"
   private_zone = false
 }
 
