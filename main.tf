@@ -185,7 +185,7 @@ resource "aws_cloudfront_distribution" "root_s3_distribution" {
 }
 
 resource "aws_route53_record" "root-a" {
-  zone_id = Z01944282QK4HREUAU3HD
+  zone_id = "Z01944282QK4HREUAU3HD"
   name = var.domain_name
   type = "A"
 
@@ -197,7 +197,7 @@ resource "aws_route53_record" "root-a" {
 }
 
 resource "aws_route53_record" "www-a" {
-  zone_id = Z01944282QK4HREUAU3HD
+  zone_id = "Z01944282QK4HREUAU3HD"
   name = "www.${var.domain_name}"
   type = "A"
 
