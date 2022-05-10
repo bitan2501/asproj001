@@ -62,7 +62,6 @@ resource "aws_acm_certificate" "ssl_certificate" {
   }
 }
 resource "aws_route53_record" "cert_validations" {
-  count = length(aws_acm_certificate.ssl_certificate.domain_validation_options)
 
   zone_id = "Z09025261WQKPGHBA2IH5"
   name    = element(aws_acm_certificate.ssl_certificate.domain_validation_options.*.resource_record_name, count.index)
