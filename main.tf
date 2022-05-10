@@ -47,32 +47,47 @@ etag = filemd5("./error.html")
 content_type = "text/html"
 }
 
-# SSL Certificate
-resource "aws_acm_certificate" "ssl_certificate" {
-  provider = aws.acm_provider
-  domain_name = var.domain_name
-  subject_alternative_names = ["www.${var.domain_name}"]
-  #validation_method = "EMAIL"
-  validation_method = "DNS"
+resource "aws_acm_certificate" "example" {
+  domain_name               = "example.com"
+  subject_alternative_names = ["www.example.com", "example.org"]
+  validation_method         = "DNS"
+}
 
-  tags = var.common_tags
+data "aws_route53_zone" "example_com" {
+  name         = "example.com"
+  private_zone = false
+}
 
-  lifecycle {
-    create_before_destroy = true
+data "aws_route53_zone" "example_org" {
+  name         = "example.org"
+  private_zone = false
+}
+
+resource "aws_route53_record" "example" {
+  for_each = {
+    for dvo in aws_acm_certificate.example.domain_validation_options : dvo.domain_name => {
+      name    = dvo.resource_record_name
+      record  = dvo.resource_record_value
+      type    = dvo.resource_record_type
+      zone_id = dvo.domain_name == "example.org" ? data.aws_route53_zone.example_org.zone_id : data.aws_route53_zone.example_com.zone_id
+    }
   }
-}
-resource "aws_route53_record" "cert_validations" {
 
-  zone_id = "Z09025261WQKPGHBA2IH5"
-  #name    = element(aws_acm_certificate.ssl_certificate.domain_validation_options.*.resource_record_name, count.index)
-  #type    = element(aws_acm_certificate.ssl_certificate.domain_validation_options.*.resource_record_type, count.index)
-  #records = [element(aws_acm_certificate.ssl_certificate.domain_validation_options.*.resource_record_value, count.index)]
-  ttl     = 60
-}
-# Uncomment the validation_record_fqdns line if you do DNS validation instead of Email.
-resource "aws_acm_certificate_validation" "cert_validation" {
-  provider = aws.acm_provider
-  certificate_arn = aws_acm_certificate.ssl_certificate.arn
-  validation_record_fqdns = aws_route53_record.cert_validations.*.fqdn
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = each.value.zone_id
 }
 
+resource "aws_acm_certificate_validation" "example" {
+  certificate_arn         = aws_acm_certificate.example.arn
+  validation_record_fqdns = [for record in aws_route53_record.example : record.fqdn]
+}
+
+resource "aws_lb_listener" "example" {
+  # ... other configuration ...
+
+  certificate_arn = aws_acm_certificate_validation.example.certificate_arn
+}
