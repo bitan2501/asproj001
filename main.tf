@@ -47,29 +47,29 @@ etag = filemd5("./error.html")
 content_type = "text/html"
 }
 
-resource "aws_acm_certificate" "example" {
-  domain_name               = "example.com"
-  subject_alternative_names = ["www.example.com", "example.org"]
+resource "aws_acm_certificate" "bitanawsproj" {
+  domain_name               = "bitanawsproj.com"
+  subject_alternative_names = ["www.bitanawsproj.com", "bitanawsproj.org"]
   validation_method         = "DNS"
 }
 
-data "aws_route53_zone" "example_com" {
-  name         = "example.com"
+data "aws_route53_zone" "bitanawsproj_com" {
+  name         = "bitanawsproj.com"
   private_zone = false
 }
 
-data "aws_route53_zone" "example_org" {
-  name         = "example.org"
+data "aws_route53_zone" "bitanawsproj_org" {
+  name         = "bitanawsproj.org"
   private_zone = false
 }
 
-resource "aws_route53_record" "example" {
+resource "aws_route53_record" "bitanawsproj" {
   for_each = {
-    for dvo in aws_acm_certificate.example.domain_validation_options : dvo.domain_name => {
+    for dvo in aws_acm_certificate.bitanawsproj.domain_validation_options : dvo.domain_name => {
       name    = dvo.resource_record_name
       record  = dvo.resource_record_value
       type    = dvo.resource_record_type
-      zone_id = dvo.domain_name == "example.org" ? data.aws_route53_zone.example_org.zone_id : data.aws_route53_zone.example_com.zone_id
+      zone_id = dvo.domain_name == "bitanawsproj.org" ? data.aws_route53_zone.bitanawsproj_org.zone_id : data.aws_route53_zone.bitanawsproj_com.zone_id
     }
   }
 
@@ -81,7 +81,7 @@ resource "aws_route53_record" "example" {
   zone_id         = each.value.zone_id
 }
 
-resource "aws_acm_certificate_validation" "example" {
-  certificate_arn         = aws_acm_certificate.example.arn
-  validation_record_fqdns = [for record in aws_route53_record.example : record.fqdn]
+resource "aws_acm_certificate_validation" "bitanawsproj" {
+  certificate_arn         = aws_acm_certificate.bitanawsproj.arn
+  validation_record_fqdns = [for record in aws_route53_record.bitanawsproj : record.fqdn]
 }
