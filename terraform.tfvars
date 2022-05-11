@@ -1,4 +1,4 @@
-domain_name = "bitanawsproj.online"
+domain_name = "bitanawsproj.onlin"
 bucket_name = "bitanawsproj.onlin"
 
 common_tags = {
