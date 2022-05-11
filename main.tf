@@ -70,7 +70,7 @@ resource "aws_acm_certificate_validation" "cert_validation" {
   #validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
 
-resource "aws_cloudfront_distribution" "www_s3_distribution" {
+resource "aws_cloudfront_distribution" "www2_s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.mybucket01.website_endpoint
     origin_id = "S3-www.${var.bucket_name}"
@@ -132,7 +132,7 @@ resource "aws_cloudfront_distribution" "www_s3_distribution" {
 }
 
 # Cloudfront S3 for redirect to www.
-resource "aws_cloudfront_distribution" "root_s3_distribution" {
+resource "aws_cloudfront_distribution" "nonwww_s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.mybucket02.website_endpoint
     origin_id = "S3-.${var.bucket_name}"
