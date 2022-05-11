@@ -1,5 +1,5 @@
-domain_name = "bitanawsproj.onlin"
-bucket_name = "bitanawsproj.onlin"
+domain_name = "bitanawsproj.online"
+bucket_name = "bitanawsproj.online"
 
 common_tags = {
   Project = "bitanawsproj"
